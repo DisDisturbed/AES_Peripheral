@@ -22,34 +22,26 @@ The peripheral operates as a memory-mapped slave on the Wishbone bus. It offload
 
 ## 🗺️ Register Map
 
-The peripheral is accessed via 32-bit memory operations. Offsets are relative to the peripheral's base address (e.g., `0x10000000` or defined system base).
+The peripheral is accessed via 32-bit memory operations. Offsets are relative to the peripheral's base address (e.g., `0x1000_8030` or defined system base).
 
 | Offset | Name | R/W | Description |
 | :--- | :--- | :--- | :--- |
-| **0x00** | `AES_IN_0` | W | Plaintext bits [31:0] |
-| **0x04** | `AES_IN_1` | W | Plaintext bits [63:32] |
-| **0x08** | `AES_IN_2` | W | Plaintext bits [95:64] |
-| **0x0C** | `AES_IN_3` | W | Plaintext bits [127:96] |
-| **0x10** | `AES_CTRL` | R/W | **Control/Status Register**.<br>• **Write 1**: Starts the encryption (Read Bit/Start Bit).<br>• **Read**: Returns 1 when encryption is **Done**. |
-| **0x14** | `AES_OUT_0` | R | Ciphertext bits [31:0] |
-| **0x18** | `AES_OUT_1` | R | Ciphertext bits [63:32] |
-| **0x1C** | `AES_OUT_2` | R | Ciphertext bits [95:64] |
-| **0x20** | `AES_OUT_3` | R | Ciphertext bits [127:96] |
+| **0x30** | `AES_IN_0` | W | Plaintext bits [31:0] |
+| **0x34** | `AES_IN_1` | W | Plaintext bits [63:32] |
+| **0x38** | `AES_IN_2` | W | Plaintext bits [95:64] |
+| **0x3C** | `AES_IN_3` | W | Plaintext bits [127:96] |
+| **0x40** | `AES_CTRL` | W | **Control Register**.<br>• **Write 1**: Starts the encryption (Read Bit/Start Bit).<br>• 
+| **0x44** | `AES_CTRL` | R | **Status Register **.<br>• **Read 1**: Checking Done.<br>• 
+| **0x48** | `AES_OUT_0` | R | Ciphertext bits [31:0] |
+| **0x4c** | `AES_OUT_1` | R | Ciphertext bits [63:32] |
+| **0x50** | `AES_OUT_2` | R | Ciphertext bits [95:64] |
+| **0x54** | `AES_OUT_3` | R | Ciphertext bits [127:96] |
 
 ## 🚀 Integration Guide
 
 ### 1. Generating Round Keys
 Since the hardware lacks an on-the-fly key expansion unit to save area, you must pre-calculate the round keys.
-
-1.  Navigate to the `Drivers/` folder.
-2.  Edit `rom_generator.c` to set your desired 128-bit Key.
-3.  Compile and run the generator:
-    ```bash
-    gcc rom_generator.c -o rom_gen
-    ./rom_gen
-    ```
-4.  This will create a `round_keys.mem` file.
-5.  **Copy** `round_keys.mem` into the `RTL/` folder (or wherever your simulator/synthesizer looks for memory initialization files).
+This site is good to have https://legacy.cryptool.org/en/cto/aes-step-by-step
 
 ### 2. Software Driver (C Code)
 To use the peripheral from the Hornet Core, use the provided `AES_code.c` and `AES_H.h`.
@@ -119,6 +111,7 @@ void fast_irq0_handler() {
 void fast_irq1_handler() {} // empty handler
 end
 ```
+
 ⚠️ Known Limitations
 Static Key: Changing the encryption key requires regenerating round_keys.mem and re-synthesizing (or reloading the FPGA block RAM).
 This peripheral is optimized for fixed-key applications or scenarios where key updates are rare and handled via bitstream updates.
