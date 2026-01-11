@@ -1,0 +1,17 @@
+# Create the gitignore file
+echo "*.cache/" > .gitignore
+echo "*.hw/" >> .gitignore
+echo "*.sim/" >> .gitignore
+echo "*.runs/" >> .gitignore
+echo "*.gen/" >> .gitignore
+echo "*.ip_user_files/" >> .gitignore
+echo "*.srcs/" >> .gitignore
+echo "*.xpr" >> .gitignore
+echo "*.os" >> .gitignore
+echo "*.jou" >> .gitignore
+echo "*.log" >> .gitignore
+echo "*.str" >> .gitignore
+echo "archive_project_summary.txt" >> .gitignore
+echo "Drivers/*.bin" >> .gitignore
+echo "Drivers/*.elf" >> .gitignore
+echo "Drivers/*.o" >> .gitignore
